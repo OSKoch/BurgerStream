@@ -1,28 +1,73 @@
-# Angular specific
+# FRONTEND (Angular)
+/burgerstream-frontend/dist/
+/burgerstream-frontend/out-tsc/
+/burgerstream-frontend/tmp/
+/burgerstream-frontend/coverage/
+/burgerstream-frontend/e2e/test-output/
+/burgerstream-frontend/.angular/
+/burgerstream-frontend/node_modules/
+/burgerstream-frontend/yarn.lock
+/burgerstream-frontend/.env
+/burgerstream-frontend/*.tsbuildinfo
+
+# BACKEND (Spring boot + Maven)
+/burgerstream-backend/target/
+/burgerstream-backend/*.log
+/burgerstream-backend/.mvn/wrapper/maven-wrapper.jar
+/burgerstream-backend/src/main/resources/application.properties
+/burgerstream-backend/src/main/resources/application.yml
+
+# Maven temporary files
+/burgerstream-backend/pom.xml.tag
+/burgerstream-backend/pom.xml.releaseBackup
+/burgerstream-backend/pom.xml.versionsBackup
+/burgerstream-backend/pom.xml.next
+/burgerstream-backend/release.properties
+/burgerstream-backend/dependency-reduced-pom.xml
+/burgerstream-backend/buildNumber.properties
+/burgerstream-backend/.mvn/timing.properties
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Ecclipse / STS
+.apt_generated
+.factorypath
+.classpath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
 /dist/
-/out-tsc/
-/tmp/
-/coverage/
-/e2e/test-output/
-/.angular/
-.angular/
+/nbdist/
+/.nb-gradle/
+/build/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# Node modules and dependency files
-/node_modules/
-/package-lock.json
-/yarn.lock
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
 
-# Environment files
-/.env
-
-# Angular CLI and build artefacts
-/.angular-cli.json
-/.ng/
-
-# TypeScript cache
-*.tsbuildinfo
-
-# Logs
+# Miscellaneous
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
