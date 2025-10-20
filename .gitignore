@@ -4,7 +4,7 @@
 /burgerstream-frontend/tmp/
 /burgerstream-frontend/coverage/
 /burgerstream-frontend/e2e/test-output/
-/burgerstream-frontend/.angular/
+/burgerstream-frontend/.angular/cache
 /burgerstream-frontend/node_modules/
 /burgerstream-frontend/yarn.lock
 /burgerstream-frontend/.env
@@ -68,6 +68,6 @@ $RECYCLE.BIN/
 *.zip
 *.tar.gz
 *.rar
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+/burgerstream-frontend/npm-debug.log*
+/burgerstream-frontend/yarn-debug.log*
+/burgerstream-frontend/yarn-error.log*
