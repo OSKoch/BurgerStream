@@ -1,0 +1,20 @@
+<h2> Menu item list</h2>
+<table class= "table table-striped">
+    <thead>
+        <tr>
+            <th> Name </th>
+            <th> Description </th>
+            <th> Price </th>
+        
+        </tr>
+    </thead>
+    <tbody>
+    @for (menuItem of menuItems; track menuItem.id) {
+        <tr>
+            <td>{{menuItem.name}}</td>
+            <td>{{menuItem.description}}</td>
+            <td>{{menuItem.basePrice}}</td>
+        </tr>
+    }
+    </tbody>
+</table>

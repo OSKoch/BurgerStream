@@ -10,6 +10,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/BurgerStream/menu/burgers")
+@CrossOrigin(origins = "Http://localhost:4200")
 public class BurgerController{
 
     private final BurgerService burgerService;
