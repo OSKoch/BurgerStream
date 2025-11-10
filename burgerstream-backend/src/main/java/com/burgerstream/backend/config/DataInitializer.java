@@ -60,56 +60,62 @@ public class DataInitializer implements CommandLineRunner {
         largeFries.setSizeLabel("Large");
         largeFries.setExtraPrice(BigDecimal.valueOf(10.00));
 
-        sizeOptionRepository.saveAll(Set.of(smallBeverage, mediumBeverage, largeFries));
+        SizeOption oneSize = new SizeOption();
+        oneSize.setLabel("Bought Product");
+        oneSize.setSizeLabel("One size");
+        oneSize.setExtraPrice(BigDecimal.valueOf(0.00));
+
+        sizeOptionRepository.saveAll(Set.of(smallBeverage, mediumBeverage, largeFries, oneSize));
 
         // Burgers
         Burger classicBurger = new Burger();
         classicBurger.setName("Classic Burger");
         classicBurger.setDescription("Juicy beef patty with cheese and lettuce");
         classicBurger.setBasePrice(BigDecimal.valueOf(75.00));
-        classicBurger.setImageURL("../classicBurger.jpg");
+        classicBurger.setImageUrl("burger1.jpg");
 
         Burger veganDelight = new Burger();
         veganDelight.setName("Vegan Delight");
         veganDelight.setDescription("Plant-based patty with avocado and sprouts");
         veganDelight.setBasePrice(BigDecimal.valueOf(80.00));
-        veganDelight.setImageURL("../veganDelight.jpg");
-        veganDelight.setVegan(true);
-        burgerRepository.saveAll(Set.of(classicBurger, veganDelight));
+        veganDelight.setImageUrl("burger2.jpg");
+        veganDelight.setIsVegan(true);
+        burgerRepository.saveAll(Set.of(veganDelight, classicBurger));
 
         //Sides
         Side fries = new Side();
         fries.setName("French Fries");
         fries.setDescription("Crispy golden fries");
         fries.setBasePrice(BigDecimal.valueOf(25.00));
-        fries.setImageURL("../fries.jpg");
-        fries.setShareable(true);
+        fries.setImageUrl("side3.jpg");
+        fries.setIsShareable(true);
         fries.setSizeOptions(Set.of(largeFries));
 
         Side macNCheese = new Side();
         macNCheese.setName("Mac n Cheese");
         macNCheese.setDescription("Delicious Mac n Cheese");
         macNCheese.setBasePrice(BigDecimal.valueOf(30.00));
-        macNCheese.setImageURL("../macNCheese.jpg");
-        sideRepository.saveAll(Set.of(fries, macNCheese));
+        macNCheese.setImageUrl("side4.jpg");
+        macNCheese.setSizeOptions(Set.of(oneSize));
+        sideRepository.saveAll(Set.of(macNCheese, fries));
 
         //Drinks
         Drink cola = new Drink();
         cola.setName("Cola");
         cola.setDescription("Refreshing soft drink");
         cola.setBasePrice(BigDecimal.valueOf(20.00));
-        cola.setImageURL("../cola.jpg");
-        cola.setCarbonated(true);
-        cola.setLactoseFree(true);
-        cola.setSizeOptions(Set.of(smallBeverage, mediumBeverage));
+        cola.setImageUrl("drink5.jpg");
+        cola.setIsCarbonated(true);
+        cola.setIsLactoseFree(true);
+        cola.setSizeOptions(Set.of(mediumBeverage, smallBeverage));
 
         Drink milkshake = new Drink();
         milkshake.setName("Chocolate Milkshake");
         milkshake.setDescription("Thick creamy milkshake");
         milkshake.setBasePrice(BigDecimal.valueOf(35.00));
-        milkshake.setImageURL("../milkshake.jpg");
-        milkshake.setSizeOptions(Set.of(smallBeverage, mediumBeverage));
-        drinkRepository.saveAll(Set.of(cola, milkshake));
+        milkshake.setImageUrl("drink6.jpg");
+        milkshake.setSizeOptions(Set.of(mediumBeverage, smallBeverage));
+        drinkRepository.saveAll(Set.of(milkshake, cola));
 
         //Order
         Order order = new Order();

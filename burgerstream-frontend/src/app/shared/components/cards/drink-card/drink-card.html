@@ -1,0 +1,42 @@
+<div class="d-flex align-items-center bg-light border rounded-pill my-1 p-1 flex-nowrap">    
+    <div class="flex-shrink-0 d-flex justify-content-center align-items-center image-container">
+        <img [src]="imageUrl" alt="" class="rounded-circle img-thumbnail">
+    </div>
+
+    <div class="flex-grow-1 px-2 min-w-0">
+        <h3 class="text-primary mb-1 text-truncate">
+            {{drink.name}}
+        </h3>
+
+        <p class="mb-1 small text-truncate">
+            {{drink.description}}
+        </p>
+
+        <span class="text-muted">
+            {{drink.isCarbonated ? 'Carbonated. ' : "" }}
+            {{drink.isLactoseFree ? 'Lactose free.' : 'Dairy.'}}
+        </span>
+    </div>
+
+    <div class="px-2 flex-shrink-0">
+        <select class="form-select form-select-sm" [(ngModel)]="selectedSize">
+            <option *ngFor="let size of drink.sizeOptions" [ngValue]="size">
+                {{size.sizeLabel}} {{ size.extraPrice === 0 ? '' : '(+' + size.extraPrice + 'kr)' }}
+            </option>
+        </select>
+    </div>
+
+    <div class="px-2 flex-shrink-0">
+        <h1 class="text-center">{{drink.basePrice}}kr.</h1>
+    </div>
+
+    <div class="px-2 flex-shrink-0 text-end pe-4">
+        <button *ngIf="!isAdmin" class="btn btn-success btn-sm">Add</button>
+
+
+        <div *ngIf="isAdmin" class="d-flex flex-column gap-1">
+            <button class="btn btn-primary btn-sm" (click)="updateDrink(drink.id)">Update</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteDrink()">Delete</button>
+        </div>
+    </div>
+</div>

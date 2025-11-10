@@ -50,7 +50,7 @@ public class OrderServiceIntegrationTest {
         Side fries = new Side();
         fries.setName("Fries");
         fries.setBasePrice(BigDecimal.valueOf(25.00));
-        fries.setShareable(Boolean.TRUE);
+        fries.setIsShareable(Boolean.TRUE);
         sideRepository.save(fries);
 
         SizeOption large = new SizeOption();

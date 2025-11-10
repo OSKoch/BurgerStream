@@ -1,6 +1,6 @@
 package com.burgerstream.backend;
 
-import com.burgerstream.backend.component.MenuItemValidator;
+import com.burgerstream.backend.component.MenuItemHelper;
 import com.burgerstream.backend.exception.ResourceNotFoundException;
 import com.burgerstream.backend.model.menu.Drink;
 import com.burgerstream.backend.model.menu.SizeOption;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-@Import({DrinkService.class, MenuItemValidator.class})
+@Import({DrinkService.class, MenuItemHelper.class})
 public class DrinkServiceIntegrationTest {
 
     @Autowired
@@ -43,7 +43,7 @@ public class DrinkServiceIntegrationTest {
 
     @Test
     void createDrink_withCorrectAttributes_drinkSaved(){
-        Drink savedDrink = drinkService.createDrink(drink);
+        Drink savedDrink = drinkService.createDrink(drink, null);
 
         assertThat(savedDrink.getId()).isNotNull();
         assertThat(savedDrink.getName()).isEqualTo("Soda Pop");
@@ -52,10 +52,10 @@ public class DrinkServiceIntegrationTest {
     @Test
     void createDrink_InvalidAttributes_throwsIllegalArgumentException(){
         drink = new Drink();
-        assertThatThrownBy( () -> drinkService.createDrink(drink))
+        assertThatThrownBy( () -> drinkService.createDrink(drink, null))
                 .isInstanceOf(IllegalArgumentException.class);
         drink.setName("Soda Pop");
-        assertThatThrownBy( () -> drinkService.createDrink(drink))
+        assertThatThrownBy( () -> drinkService.createDrink(drink, null))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -73,7 +73,7 @@ public class DrinkServiceIntegrationTest {
         List<Drink> allCarbonatedDrinks = drinkService.getFilteredDrinks(true,false);
 
         assertThat(allCarbonatedDrinks).hasSize(4);
-        assertThat(allCarbonatedDrinks.stream().allMatch(Drink::getCarbonated)).isTrue();
+        assertThat(allCarbonatedDrinks.stream().allMatch(Drink::getIsCarbonated)).isTrue();
     }
 
     @Test
@@ -82,7 +82,7 @@ public class DrinkServiceIntegrationTest {
         List<Drink> allLactoseFreeDrinks = drinkService.getFilteredDrinks(false,true);
 
         assertThat(allLactoseFreeDrinks).hasSize(3);
-        assertThat(allLactoseFreeDrinks.stream().allMatch(Drink::getLactoseFree)).isTrue();
+        assertThat(allLactoseFreeDrinks.stream().allMatch(Drink::getIsLactoseFree)).isTrue();
     }
 
     @Test
@@ -92,8 +92,8 @@ public class DrinkServiceIntegrationTest {
 
         assertThat(allCarbonatedAndLactoseFreeDrinks).hasSize(1);
         assertThat(allCarbonatedAndLactoseFreeDrinks)
-                .allMatch(Drink::getCarbonated)
-                .allMatch(Drink::getLactoseFree);
+                .allMatch(Drink::getIsCarbonated)
+                .allMatch(Drink::getIsLactoseFree);
     }
 
     @Test
@@ -120,7 +120,7 @@ public class DrinkServiceIntegrationTest {
         Drink newDrinkDetails = new Drink();
         newDrinkDetails.setName("Fizzy Drink");
         newDrinkDetails.setBasePrice(BigDecimal.valueOf(20.00));
-        Drink updateDrink = drinkService.updateDrink(drinkId,newDrinkDetails);
+        Drink updateDrink = drinkService.updateDrink(drinkId,newDrinkDetails, null);
 
         assertThat(updateDrink.getName()).isEqualTo("Fizzy Drink");
         assertThat(updateDrink.getBasePrice()).isEqualTo(BigDecimal.valueOf(20.00));
@@ -132,7 +132,7 @@ public class DrinkServiceIntegrationTest {
         newDrinkDetails.setName("Fizzy Drink");
         newDrinkDetails.setBasePrice(BigDecimal.valueOf(20.00));
 
-        assertThatThrownBy(() -> drinkService.updateDrink(999L, newDrinkDetails))
+        assertThatThrownBy(() -> drinkService.updateDrink(999L, newDrinkDetails, null))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -142,11 +142,11 @@ public class DrinkServiceIntegrationTest {
         Long drinkId = drink.getId();
         Drink newDrinkDetails = new Drink();
 
-        assertThatThrownBy(() -> drinkService.updateDrink(drinkId, newDrinkDetails))
+        assertThatThrownBy(() -> drinkService.updateDrink(drinkId, newDrinkDetails, null))
                 .isInstanceOf(IllegalArgumentException.class);
 
         newDrinkDetails.setName("Fizzy Drink");
-        assertThatThrownBy(() -> drinkService.updateDrink(drinkId, newDrinkDetails))
+        assertThatThrownBy(() -> drinkService.updateDrink(drinkId, newDrinkDetails, null))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -268,7 +268,7 @@ public class DrinkServiceIntegrationTest {
             Drink drink = new Drink();
             drink.setName("Carbonated Drink: " + (i + 1)); // added parentheses to fix concatenation order
             drink.setBasePrice(BigDecimal.valueOf(20.00));
-            drink.setCarbonated(true);
+            drink.setIsCarbonated(true);
             drinkRepository.save(drink);
         }
 
@@ -276,15 +276,15 @@ public class DrinkServiceIntegrationTest {
             Drink drink = new Drink();
             drink.setName("Lactose Free Drink: " + (i + 1));
             drink.setBasePrice(BigDecimal.valueOf(25.00));
-            drink.setLactoseFree(true);
+            drink.setIsLactoseFree(true);
             drinkRepository.save(drink);
         }
 
         Drink hybrid = new Drink();
         hybrid.setName("Hybrid Drink");
         hybrid.setBasePrice(BigDecimal.valueOf(35.00));
-        hybrid.setCarbonated(true);
-        hybrid.setLactoseFree(true);
+        hybrid.setIsCarbonated(true);
+        hybrid.setIsLactoseFree(true);
         drinkRepository.save(hybrid);
     }
 

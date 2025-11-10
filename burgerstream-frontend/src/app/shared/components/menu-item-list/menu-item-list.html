@@ -1,0 +1,23 @@
+<h1 class="fs-2">Menu item list</h1>
+
+<h2 class="fs-4 mt-3">Burgers:</h2>
+<div class="d-flex flex-column align-items-center">
+    @for (burger of burgers; track burger) {
+        <burger-card [burger]="burger" [isAdmin]="isAdmin" class="w-100" (burgerDeleted)="onBurgerDeleted($event)"></burger-card>
+    }
+</div>
+
+<h2 class="fs-4 mt-4">Drinks:</h2>
+<div class="d-flex flex-column align-items-center">
+    @for (drink of drinks; track drink) {
+        <drink-card [drink]="drink" [isAdmin]="isAdmin" class="w-100" (drinkDeleted)="onDrinkDeleted($event)"></drink-card>
+    }
+</div>
+
+
+<h2 class="fs-4 mt-4">Sides:</h2>
+<div class="d-flex flex-column align-items-center">
+    @for (side of sides; track side) {
+        <side-card [side]="side" [isAdmin]="isAdmin" class="w-100" (sideDeleted)="onSideDeleted($event)"></side-card>
+    }
+</div>

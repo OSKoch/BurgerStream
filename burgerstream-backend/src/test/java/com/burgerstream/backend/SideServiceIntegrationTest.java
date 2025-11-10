@@ -1,6 +1,6 @@
 package com.burgerstream.backend;
 
-import com.burgerstream.backend.component.MenuItemValidator;
+import com.burgerstream.backend.component.MenuItemHelper;
 import com.burgerstream.backend.exception.ResourceNotFoundException;
 import com.burgerstream.backend.model.menu.Side;
 import com.burgerstream.backend.model.menu.SizeOption;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-@Import({SideService.class, MenuItemValidator.class})
+@Import({SideService.class, MenuItemHelper.class})
 public class SideServiceIntegrationTest {
     
     @Autowired
@@ -43,7 +43,7 @@ public class SideServiceIntegrationTest {
 
     @Test
     void createSide_withCorrectAttributes_sideSaved(){
-        Side savedSide = sideService.createSide(side);
+        Side savedSide = sideService.createSide(side, null);
 
         assertThat(savedSide.getId()).isNotNull();
         assertThat(savedSide.getName()).isEqualTo("French Fries");
@@ -52,10 +52,10 @@ public class SideServiceIntegrationTest {
     @Test
     void createSide_InvalidAttributes_throwsIllegalArgumentException(){
         side = new Side();
-        assertThatThrownBy( () -> sideService.createSide(side))
+        assertThatThrownBy( () -> sideService.createSide(side, null))
                 .isInstanceOf(IllegalArgumentException.class);
         side.setName("French Fries");
-        assertThatThrownBy( () -> sideService.createSide(side))
+        assertThatThrownBy( () -> sideService.createSide(side, null))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -73,7 +73,7 @@ public class SideServiceIntegrationTest {
         List<Side> allShareableSides = sideService.getFilteredSides(true);
 
         assertThat(allShareableSides).hasSize(3);
-        assertThat(allShareableSides.stream().allMatch(Side::getShareable)).isTrue();
+        assertThat(allShareableSides.stream().allMatch(Side::getIsShareable)).isTrue();
     }
 
     @Test
@@ -100,7 +100,7 @@ public class SideServiceIntegrationTest {
         Side newSideDetails = new Side();
         newSideDetails.setName("Curly Fries");
         newSideDetails.setBasePrice(BigDecimal.valueOf(30.00));
-        Side updateSide = sideService.updateSide(sideId,newSideDetails);
+        Side updateSide = sideService.updateSide(sideId,newSideDetails, null);
 
         assertThat(updateSide.getName()).isEqualTo("Curly Fries");
         assertThat(updateSide.getBasePrice()).isEqualTo(BigDecimal.valueOf(30.00));
@@ -112,7 +112,7 @@ public class SideServiceIntegrationTest {
         newSideDetails.setName("Curly Fries");
         newSideDetails.setBasePrice(BigDecimal.valueOf(30.00));
 
-        assertThatThrownBy(() -> sideService.updateSide(999L, newSideDetails))
+        assertThatThrownBy(() -> sideService.updateSide(999L, newSideDetails, null))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -122,11 +122,11 @@ public class SideServiceIntegrationTest {
         Long sideId = side.getId();
         Side newSideDetails = new Side();
 
-        assertThatThrownBy(() -> sideService.updateSide(sideId, newSideDetails))
+        assertThatThrownBy(() -> sideService.updateSide(sideId, newSideDetails, null))
                 .isInstanceOf(IllegalArgumentException.class);
 
         newSideDetails.setName("Curly Fries");
-        assertThatThrownBy(() -> sideService.updateSide(sideId, newSideDetails))
+        assertThatThrownBy(() -> sideService.updateSide(sideId, newSideDetails, null))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -245,7 +245,7 @@ public class SideServiceIntegrationTest {
             Side side = new Side();
             side.setName("Shareable side: " + (i + 1)); // added parentheses to fix concatenation order
             side.setBasePrice(BigDecimal.valueOf(20.00));
-            side.setShareable(true);
+            side.setIsShareable(true);
             sideRepository.save(side);
         }
 

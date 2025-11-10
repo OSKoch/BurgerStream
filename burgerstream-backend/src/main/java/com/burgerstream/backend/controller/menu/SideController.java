@@ -5,6 +5,7 @@ import com.burgerstream.backend.model.menu.SizeOption;
 import com.burgerstream.backend.service.menu.SideService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -20,9 +21,9 @@ public class SideController {
         this.sideService = sideService;
     }
 
-    @PostMapping
-    public Side createSide(@RequestBody Side side) {
-        return sideService.createSide(side);
+    @PostMapping(consumes = {"multipart/form-data"})
+    public Side createSide(@RequestPart("side") Side side, @RequestPart(value = "image", required = false) MultipartFile image) {
+        return sideService.createSide(side, image);
     }
 
     @GetMapping("/{id}")
@@ -38,8 +39,10 @@ public class SideController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Side> updateSide(@PathVariable Long id, @RequestBody Side newSideDetails){
-        return ResponseEntity.ok(sideService.updateSide(id, newSideDetails));
+    public ResponseEntity<Side> updateSide(@PathVariable Long id,
+                                           @RequestPart("side") Side newSideDetails,
+                                           @RequestPart(value = "image", required = false) MultipartFile image){
+        return ResponseEntity.ok(sideService.updateSide(id, newSideDetails, image));
     }
 
     @DeleteMapping("/{id}")

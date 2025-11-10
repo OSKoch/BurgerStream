@@ -22,11 +22,11 @@ public class Side extends MenuItem{
     )
     private Set<SizeOption> sizeOptions = new HashSet<>();
 
-    public Boolean getShareable() {
+    public Boolean getIsShareable() {
         return isShareable;
     }
 
-    public void setShareable(Boolean shareable) {
+    public void setIsShareable(Boolean shareable) {
         isShareable = shareable;
     }
 

@@ -17,34 +17,34 @@ public class Burger extends MenuItem{
     @Column(name = "is_lactose_free")
     private Boolean isLactoseFree = false;
 
-    public Boolean getVegan() {
+    public Boolean getIsVegan() {
         return isVegan;
     }
 
-    public void setVegan(Boolean vegan) {
+    public void setIsVegan(Boolean vegan) {
         isVegan = vegan;
-        this.setLactoseFree(true);
-        if (vegan && getChicken()){
-            this.setChicken(false);
+        this.setIsLactoseFree(true);
+        if (vegan && getIsChicken()){
+            this.setIsChicken(false);
         }
     }
 
-    public Boolean getChicken() {
+    public Boolean getIsChicken() {
         return isChicken;
     }
 
-    public void setChicken(Boolean chicken) {
+    public void setIsChicken(Boolean chicken) {
         isChicken = chicken;
-        if (chicken && getVegan()){
-            this.setVegan(false);
+        if (chicken && getIsVegan()){
+            this.setIsVegan(false);
         }
     }
 
-    public Boolean getLactoseFree() {
+    public Boolean getIsLactoseFree() {
         return isLactoseFree;
     }
 
-    public void setLactoseFree(Boolean lactoseFree) {
+    public void setIsLactoseFree(Boolean lactoseFree) {
         isLactoseFree = lactoseFree;
     }
 }

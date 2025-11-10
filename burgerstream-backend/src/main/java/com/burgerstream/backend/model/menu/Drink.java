@@ -26,19 +26,19 @@ public class Drink extends MenuItem{
 
     public Drink() {}
 
-    public Boolean getCarbonated() {
+    public Boolean getIsCarbonated() {
         return isCarbonated;
     }
 
-    public void setCarbonated(Boolean carbonated) {
+    public void setIsCarbonated(Boolean carbonated) {
         isCarbonated = carbonated;
     }
 
-    public Boolean getLactoseFree() {
+    public Boolean getIsLactoseFree() {
         return isLactoseFree;
     }
 
-    public void setLactoseFree(Boolean dairy) {
+    public void setIsLactoseFree(Boolean dairy) {
         isLactoseFree = dairy;
     }
 

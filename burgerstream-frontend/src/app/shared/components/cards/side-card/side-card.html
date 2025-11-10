@@ -1,0 +1,41 @@
+<div class="d-flex align-items-center bg-light border rounded-pill my-1 p-1 flex-nowrap">    
+    <div class="flex-shrink-0 d-flex justify-content-center align-items-center image-container">
+        <img [src]="imageUrl" alt="" class="rounded-circle img-thumbnail">
+    </div>
+
+    <div class="flex-grow-1 px-2 min-w-0">
+        <h3 class="text-primary mb-1 text-truncate">
+            {{side.name}}
+        </h3>
+
+        <p class="mb-1 small text-truncate">
+            {{side.description}}
+        </p>
+
+        <span class="text-muted">
+            {{side.isShareable ? 'Can be share with a friend! ' : "" }}
+        </span>
+    </div>
+
+    <div class="px-2 flex-shrink-0">
+        <select class="form-select form-select-sm" [(ngModel)]="selectedSize">
+            <option *ngFor="let size of side.sizeOptions" [ngValue]="size">
+                {{size.sizeLabel}} {{ size.extraPrice === 0 ? '' : '(+' + size.extraPrice + 'kr)' }}
+            </option>
+        </select>
+    </div>
+
+    <div class="px-2 flex-shrink-0">
+        <h1 class="text-center">{{side.basePrice}}kr.</h1>
+    </div>
+
+    <div class="px-2 flex-shrink-0 text-end pe-4">
+        <button *ngIf="!isAdmin" class="btn btn-success btn-sm">Add</button>
+
+
+        <div *ngIf="isAdmin" class="d-flex flex-column gap-1">
+            <button class="btn btn-primary btn-sm" (click)="updateSide(side.id)">Update</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteSide()">Delete</button>
+        </div>
+    </div>
+</div>

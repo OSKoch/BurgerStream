@@ -1,0 +1,18 @@
+<h1 class="text-center"> Overview of menu items </h1>
+<div class="row">
+
+    <div class="col-2">
+        <h2 class="text-right">Creation tab:</h2>
+        <div class="d-flex flex-column gap-1">
+            <button (click)="createBurger()" class="btn btn-primary">Create Burger</button>
+
+            <button (click)="createDrink()" class="btn btn-primary">Create Drink</button>
+
+            <button (click)="createSide()" class="btn btn-primary btn">Create Side</button>
+        </div>
+    </div>
+
+    <div class="col-8">
+        <menu-item-list [isAdmin]="true"></menu-item-list>
+    </div>
+</div>

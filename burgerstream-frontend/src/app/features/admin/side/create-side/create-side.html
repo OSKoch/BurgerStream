@@ -1,0 +1,100 @@
+<div class="text-center">
+    <h1>Create New Side</h1>
+</div>
+
+<div class="container mt-4">
+    <form #sideForm="ngForm" (ngSubmit)="onSubmit()" class="p-3 border rounded bg-light">
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <label class="form-label fw-semibold">Name:</label>
+                <input type="text" required class="form-control" id="name" [(ngModel)]="side.name" name="name"
+                    #nameCtrl="ngModel">
+
+                <div *ngIf="nameCtrl.invalid && nameCtrl.touched" class="text-danger mt-1">
+                    Name is required.
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Price:</label>
+                <input type="number" required min="0.00" class="form-control" id="basePrice"
+                    [(ngModel)]="side.basePrice" name="basePrice" #priceCtrl="ngModel">
+
+                <div *ngIf="priceCtrl.invalid && priceCtrl.touched" class="text-danger mt-1">
+                    Price is required and must be greater than 0.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label fw-semibold">Description:</label>
+                <textarea rows="3" class="form-control" id="description" [(ngModel)]="side.description"
+                    name="description">
+                </textarea>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-center flex-wrap gap-4">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="isShareable" [(ngModel)]="side.isShareable"
+                        name="isShareable">
+                    <label class="form-check-label">Shareable</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12 col-md-6">
+                <label for="sizeSelect" class="form-label fw-semibold">Add Size:</label>
+                <div class="input-group">
+                    <select class="form-select" [(ngModel)]="selectedSize" name="sizeSelect" id="sizeSelect">
+                        <option *ngFor="let size of allSizes" [ngValue]="size">
+                            {{size.label}} - {{size.sizeLabel}} - (+{{size.extraPrice}}kr)
+                        </option>
+                    </select>
+                    <button class="btn btn-success" type="button" (click)="selectedSize && addSizeToSide(selectedSize)"
+                        [disabled]="!selectedSize">
+                        Add
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label fw-semibold">Selected Sizes:</label>
+                <div class="mb-2">
+                    <span *ngFor="let size of side.sizeOptions" class="badge bg-primary me-2">
+                        {{size.sizeLabel}} (+{{size.extraPrice}}kr)
+                        <button type="button" class="btn-close btn-close-white btn-sm ms-1"
+                            (click)="removeSizeFromSide(size)"></button>
+                    </span>
+                    <div *ngIf="side.sizeOptions.length === 0" class="text-danger mt-1">
+                        At least one size must be selected.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label fw-semibold">Upload Image</label>
+                <input type="file" 
+                    accept=".png, .jpg, .jpeg, .avif, .webp" 
+                    class="form-control" 
+                    id="imageUrl" 
+                    (change)="onFileSelected($event)" 
+                    name="imageUrl">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <button class="btn btn-success px-5" type="submit" [disabled]="sideForm.invalid">Save Side</button>
+            </div>
+        </div>
+    </form>
+</div>

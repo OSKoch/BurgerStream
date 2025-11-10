@@ -1,0 +1,107 @@
+<div class="text-center">
+    <h1>Update Burger</h1>
+</div>
+
+<div class="container mt-4">
+    <form #burgerForm="ngForm" (ngSubmit)="onSubmit()" class="p-3 border rounded bg-light">
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <label class="form-label fw-semibold">Name:</label>
+                <input type="text" 
+                    required class="form-control" 
+                    id="name" 
+                    [(ngModel)]="burger.name" 
+                    name="name" 
+                    #nameCtrl="ngModel">
+    
+                <div *ngIf="nameCtrl.invalid && nameCtrl.touched" class="text-danger mt-1">
+                    Name is required.
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Price:</label>
+                <input type="number" 
+                    required min="0.00" 
+                    class="form-control" 
+                    id="basePrice" 
+                    [(ngModel)]="burger.basePrice" 
+                    name="basePrice" 
+                    #priceCtrl="ngModel">
+
+                <div *ngIf="priceCtrl.invalid && priceCtrl.touched" class="text-danger mt-1">
+                    Price is required and must be greater than 0.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label fw-semibold">Description:</label>
+                <textarea rows="3" 
+                    class="form-control" 
+                    id="description" 
+                    [(ngModel)]="burger.description" 
+                    name="description">
+                </textarea>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-center flex-wrap gap-4">
+                <div class="form-check">
+                    <input type="checkbox" 
+                        class="form-check-input" 
+                        id="isVegan" 
+                        [(ngModel)]="burger.isVegan" 
+                        name="isVegan"
+                        [disabled]="veganDisabled"
+                        (change)="updateCheckboxes()">
+                    <label class="form-check-label">Vegan</label>
+                </div>
+
+                <div class="form-check">
+                    <input type="checkbox" 
+                        class="form-check-input" 
+                        id="isChicken" 
+                        [(ngModel)]="burger.isChicken" 
+                        name="isChicken"
+                        [disabled]="chickenDisabled"
+                        (change)="updateCheckboxes()">
+                        
+                    <label class="form-check-label">Chicken</label>
+                </div>
+
+                <div class="form-check">
+                    <input type="checkbox" 
+                        class="form-check-input" 
+                        id="isLactoseFree" 
+                        [(ngModel)]="burger.isLactoseFree" 
+                        name="isLactoseFree"
+                        [disabled]="lactoseFreeDisabled"
+                        (change)="updateCheckboxes()">
+                    <label class="form-check-label">Lactose free</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label fw-semibold">Upload Image</label>
+                <input type="file" 
+                    accept=".png, .jpg, .jpeg, .avif, .webp" 
+                    class="form-control" 
+                    id="imageUrl" 
+                    (change)="onFileSelected($event)" 
+                    name="imageUrl">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <button class="btn btn-success px-5" type="submit" [disabled]="burgerForm.invalid">Update Burger</button>
+            </div>
+        </div>
+    </form>
+</div>

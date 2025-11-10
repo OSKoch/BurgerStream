@@ -1,12 +1,13 @@
 package com.burgerstream.backend.service.menu;
 
-import com.burgerstream.backend.component.MenuItemValidator;
+import com.burgerstream.backend.component.MenuItemHelper;
 import com.burgerstream.backend.exception.ResourceNotFoundException;
 import com.burgerstream.backend.model.menu.Drink;
 import com.burgerstream.backend.model.menu.SizeOption;
 import com.burgerstream.backend.repository.menu.DrinkRepository;
 import com.burgerstream.backend.repository.menu.SizeOptionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,16 +19,24 @@ public class DrinkService {
 
     private final DrinkRepository drinkRepository;
     private final SizeOptionRepository sizeOptionRepository;
-    private final MenuItemValidator validator;
+    private final MenuItemHelper menuItemHelper;
 
-    public DrinkService(DrinkRepository drinkRepository, SizeOptionRepository sizeOptionRepository, MenuItemValidator validator){
+    public DrinkService(DrinkRepository drinkRepository,
+                        SizeOptionRepository sizeOptionRepository,
+                        MenuItemHelper itemHelper){
         this.drinkRepository = drinkRepository;
         this.sizeOptionRepository = sizeOptionRepository;
-        this.validator = validator;
+        this.menuItemHelper = itemHelper;
     }
 
-    public Drink createDrink(Drink drink){
-        validator.validate(drink);
+    public Drink createDrink(Drink drink, MultipartFile image){
+        menuItemHelper.validate(drink);
+
+        if (image != null && !image.isEmpty()){
+            menuItemHelper.saveImage(image);
+            drink.setImageUrl(image.getOriginalFilename());
+        }
+
         return drinkRepository.save(drink);
     }
 
@@ -47,25 +56,38 @@ public class DrinkService {
     }
 
     public Drink getDrink(Long id){
-        return drinkRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Drink with id: " + id + " does not exist"));
+        return drinkRepository.findById(id)
+                .orElseThrow( () -> new ResourceNotFoundException("Drink with id: " + id + " does not exist"));
     }
 
-    public Drink updateDrink(Long id, Drink newDrinkDetails){
-        Drink oldDrinkDetails = drinkRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Drink with id: " + id + " does not exist"));
-        validator.validate(newDrinkDetails);
+    public Drink updateDrink(Long id, Drink newDrinkDetails, MultipartFile image){
+        menuItemHelper.validate(newDrinkDetails);
+
+        Drink oldDrinkDetails = drinkRepository.findById(id)
+                .orElseThrow( () -> new ResourceNotFoundException("Drink with id: " + id + " does not exist"));
+
+        if(image != null && !image.isEmpty()){
+            menuItemHelper.replaceImage(oldDrinkDetails.getImageUrl(), image);
+            oldDrinkDetails.setImageUrl(image.getOriginalFilename());
+        }
 
         oldDrinkDetails.setName(newDrinkDetails.getName());
         oldDrinkDetails.setDescription(newDrinkDetails.getDescription());
         oldDrinkDetails.setBasePrice(newDrinkDetails.getBasePrice());
-        oldDrinkDetails.setImageURL(newDrinkDetails.getImageURL());
-        oldDrinkDetails.setCarbonated(newDrinkDetails.getCarbonated());
-        oldDrinkDetails.setLactoseFree(newDrinkDetails.getLactoseFree());
+        oldDrinkDetails.setSizeOptions(newDrinkDetails.getSizeOptions());
+        oldDrinkDetails.setIsCarbonated(newDrinkDetails.getIsCarbonated());
+        oldDrinkDetails.setIsLactoseFree(newDrinkDetails.getIsLactoseFree());
 
         return drinkRepository.save(oldDrinkDetails);
     }
 
     public Map<String, Boolean> deleteDrink(Long id){
-        Drink drink = drinkRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Drink with id: " + id + " does not exist"));
+        Drink drink = drinkRepository.findById(id)
+                .orElseThrow( () -> new ResourceNotFoundException("Drink with id: " + id + " does not exist"));
+
+        if(drink.getImageUrl() != null && !drink.getImageUrl().isEmpty()){
+            menuItemHelper.deleteImage(drink.getImageUrl());
+        }
 
         drinkRepository.delete(drink);
 
@@ -75,13 +97,16 @@ public class DrinkService {
     }
 
     public Set<SizeOption> getDrinkSizes(Long id){
-        Drink drink = drinkRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Drink with id: " + id + " does not exist"));
+        Drink drink = drinkRepository.findById(id)
+                .orElseThrow( () -> new ResourceNotFoundException("Drink with id: " + id + " does not exist"));
         return drink.getSizeOptions();
     }
 
     public Drink addDrinkSizeOption(Long id, Long sizeId){
-        Drink drink = drinkRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Drink with id: " + id + " does not exist"));
-        SizeOption size = sizeOptionRepository.findById(sizeId).orElseThrow( () -> new ResourceNotFoundException("Size with id: " + sizeId + " does not exist"));
+        Drink drink = drinkRepository.findById(id)
+                .orElseThrow( () -> new ResourceNotFoundException("Drink with id: " + id + " does not exist"));
+        SizeOption size = sizeOptionRepository.findById(sizeId)
+                .orElseThrow( () -> new ResourceNotFoundException("Size with id: " + sizeId + " does not exist"));
 
         drink.getSizeOptions().add(size);
 
@@ -89,8 +114,10 @@ public class DrinkService {
     }
 
     public Drink removeDrinkSizeOption(Long id, Long sizeId){
-        Drink drink = drinkRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Drink with id: " + id + " does not exist"));
-        SizeOption size = sizeOptionRepository.findById(sizeId).orElseThrow( () -> new ResourceNotFoundException("Size with id: " + sizeId + " does not exist"));
+        Drink drink = drinkRepository.findById(id)
+                .orElseThrow( () -> new ResourceNotFoundException("Drink with id: " + id + " does not exist"));
+        SizeOption size = sizeOptionRepository.findById(sizeId)
+                .orElseThrow( () -> new ResourceNotFoundException("Size with id: " + sizeId + " does not exist"));
 
         drink.getSizeOptions().remove(size);
 

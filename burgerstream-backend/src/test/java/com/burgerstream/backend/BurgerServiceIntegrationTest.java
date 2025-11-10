@@ -1,6 +1,6 @@
 package com.burgerstream.backend;
 
-import com.burgerstream.backend.component.MenuItemValidator;
+import com.burgerstream.backend.component.MenuItemHelper;
 import com.burgerstream.backend.exception.ResourceNotFoundException;
 import com.burgerstream.backend.model.menu.Burger;
 import com.burgerstream.backend.repository.menu.BurgerRepository;
@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-@Import({BurgerService.class, MenuItemValidator.class})
+@Import({BurgerService.class, MenuItemHelper.class})
 public class BurgerServiceIntegrationTest {
 
     @Autowired
@@ -38,7 +38,7 @@ public class BurgerServiceIntegrationTest {
 
     @Test
     void createBurger_withCorrectAttributes_burgerSaved(){
-        Burger savedBurger = burgerService.createBurger(burger);
+        Burger savedBurger = burgerService.createBurger(burger, null);
 
         assertThat(savedBurger.getId()).isNotNull();
         assertThat(savedBurger.getName()).isEqualTo("Hamburger");
@@ -47,10 +47,10 @@ public class BurgerServiceIntegrationTest {
     @Test
     void createBurger_InvalidAttributes_throwsIllegalArgumentException(){
         burger = new Burger();
-        assertThatThrownBy( () -> burgerService.createBurger(burger))
+        assertThatThrownBy( () -> burgerService.createBurger(burger, null))
                 .isInstanceOf(IllegalArgumentException.class);
         burger.setName("Hamburger");
-        assertThatThrownBy( () -> burgerService.createBurger(burger))
+        assertThatThrownBy( () -> burgerService.createBurger(burger, null))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -68,7 +68,7 @@ public class BurgerServiceIntegrationTest {
         List<Burger> allVeganBurgers = burgerService.getFilteredBurgers(true,false, false);
 
         assertThat(allVeganBurgers).hasSize(3);
-        assertThat(allVeganBurgers.stream().allMatch(Burger::getVegan)).isTrue();
+        assertThat(allVeganBurgers.stream().allMatch(Burger::getIsVegan)).isTrue();
     }
 
     @Test
@@ -77,7 +77,7 @@ public class BurgerServiceIntegrationTest {
         List<Burger> allChickenBurgers = burgerService.getFilteredBurgers(false, true, false);
 
         assertThat(allChickenBurgers).hasSize(5);
-        assertThat(allChickenBurgers.stream().allMatch(Burger::getChicken)).isTrue();
+        assertThat(allChickenBurgers.stream().allMatch(Burger::getIsChicken)).isTrue();
     }
 
     @Test
@@ -86,7 +86,7 @@ public class BurgerServiceIntegrationTest {
         List<Burger> allLactoseFreeBurgers = burgerService.getFilteredBurgers(false, false, true);
 
         assertThat(allLactoseFreeBurgers).hasSize(6);
-        assertThat(allLactoseFreeBurgers.stream().allMatch(Burger::getLactoseFree)).isTrue();
+        assertThat(allLactoseFreeBurgers.stream().allMatch(Burger::getIsLactoseFree)).isTrue();
     }
 
     @Test
@@ -96,8 +96,8 @@ public class BurgerServiceIntegrationTest {
 
         assertThat(allChickenAndLactoseFreeBurgers).hasSize(1);
         assertThat(allChickenAndLactoseFreeBurgers)
-                .allMatch(Burger::getChicken)
-                .allMatch(Burger::getLactoseFree);
+                .allMatch(Burger::getIsChicken)
+                .allMatch(Burger::getIsLactoseFree);
     }
 
     @Test
@@ -131,7 +131,7 @@ public class BurgerServiceIntegrationTest {
         Burger newBurgerDetails = new Burger();
         newBurgerDetails.setName("Base Burger");
         newBurgerDetails.setBasePrice(BigDecimal.valueOf(55.00));
-        Burger updateBurger = burgerService.updateBurger(burgerId,newBurgerDetails);
+        Burger updateBurger = burgerService.updateBurger(burgerId,newBurgerDetails, null);
 
         assertThat(updateBurger.getName()).isEqualTo("Base Burger");
         assertThat(updateBurger.getBasePrice()).isEqualTo(BigDecimal.valueOf(55.00));
@@ -143,7 +143,7 @@ public class BurgerServiceIntegrationTest {
         newBurgerDetails.setName("Base Burger");
         newBurgerDetails.setBasePrice(BigDecimal.valueOf(20.00));
 
-        assertThatThrownBy(() -> burgerService.updateBurger(999L, newBurgerDetails))
+        assertThatThrownBy(() -> burgerService.updateBurger(999L, newBurgerDetails, null))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -153,11 +153,11 @@ public class BurgerServiceIntegrationTest {
         Long burgerId = burger.getId();
         Burger newBurgerDetails = new Burger();
 
-        assertThatThrownBy(() -> burgerService.updateBurger(burgerId, newBurgerDetails))
+        assertThatThrownBy(() -> burgerService.updateBurger(burgerId, newBurgerDetails, null))
                 .isInstanceOf(IllegalArgumentException.class);
 
         newBurgerDetails.setName("Base Burger");
-        assertThatThrownBy(() -> burgerService.updateBurger(burgerId, newBurgerDetails))
+        assertThatThrownBy(() -> burgerService.updateBurger(burgerId, newBurgerDetails, null))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -183,7 +183,7 @@ public class BurgerServiceIntegrationTest {
             Burger burger = new Burger();
             burger.setName("Vegan Burger: " + (i + 1));
             burger.setBasePrice(BigDecimal.valueOf(70.00));
-            burger.setVegan(true);
+            burger.setIsVegan(true);
             burgerRepository.save(burger);
         }
 
@@ -191,7 +191,7 @@ public class BurgerServiceIntegrationTest {
             Burger burger = new Burger();
             burger.setName("Chicken Burger: " + (i + 1));
             burger.setBasePrice(BigDecimal.valueOf(65.00));
-            burger.setChicken(true);
+            burger.setIsChicken(true);
             burgerRepository.save(burger);
         }
 
@@ -199,15 +199,15 @@ public class BurgerServiceIntegrationTest {
             Burger burger = new Burger();
             burger.setName("Lactose Free Burger: " + (i + 1));
             burger.setBasePrice(BigDecimal.valueOf(55.00));
-            burger.setLactoseFree(true);
+            burger.setIsLactoseFree(true);
             burgerRepository.save(burger);
         }
 
         Burger hybrid = new Burger();
         hybrid.setName("Hybrid Burger");
         hybrid.setBasePrice(BigDecimal.valueOf(60.00));
-        hybrid.setChicken(true);
-        hybrid.setLactoseFree(true);
+        hybrid.setIsChicken(true);
+        hybrid.setIsLactoseFree(true);
         burgerRepository.save(hybrid);
     }
 }

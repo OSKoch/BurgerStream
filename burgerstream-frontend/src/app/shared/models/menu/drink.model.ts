@@ -2,7 +2,7 @@ import { MenuItem } from "./menu-item.model";
 import { SizeOption } from "./sizeOption.model";
 
 export class Drink implements MenuItem {
-    id: number;
+    id?: number;
     name: string;
     description?: string;
     basePrice: number;
@@ -12,8 +12,7 @@ export class Drink implements MenuItem {
     isCarbonated?: boolean;
     isLactoseFree?: boolean;
 
-    constructor(id: number, name: string, description: string, basePrice: number, imageUrl: string, sizeOptions: SizeOption[], isCarbonated: boolean = false, isLactoseFree: boolean = false){
-        this.id = id;
+    constructor(name: string, description: string, basePrice: number, imageUrl: string, sizeOptions: SizeOption[], isCarbonated: boolean = false, isLactoseFree: boolean = false){
         this.name = name,
         this.description = description,
         this.basePrice = basePrice;

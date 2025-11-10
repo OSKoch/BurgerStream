@@ -1,7 +1,7 @@
 import { MenuItem } from "./menu-item.model";
 
 export class Burger implements MenuItem{
-    id: number;
+    id?: number;
     name: string;
     description?: string | undefined;
     basePrice: number;
@@ -11,8 +11,7 @@ export class Burger implements MenuItem{
     isChicken: boolean;
     isLactoseFree: boolean;
     
-    constructor(id: number, name: string, description: string, basePrice: number, imageUrl: string, isVegan: boolean = false, isChicken: boolean = false, isLactoseFree: boolean = false){
-        this.id = id;
+    constructor(name: string, description: string, basePrice: number, imageUrl: string, isVegan: boolean = false, isChicken: boolean = false, isLactoseFree: boolean = false){
         this.name = name,
         this.description = description,
         this.basePrice = basePrice;

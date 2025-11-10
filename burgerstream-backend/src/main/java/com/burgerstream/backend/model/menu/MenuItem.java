@@ -59,11 +59,11 @@ public abstract class MenuItem {
         this.basePrice = basePrice;
     }
 
-    public String getImageURL() {
+    public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageURL(String imageURL) {
+    public void setImageUrl(String imageURL) {
         this.imageUrl = imageURL;
     }
 }
